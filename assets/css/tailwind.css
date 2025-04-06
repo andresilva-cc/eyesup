@@ -2,3 +2,7 @@
 /* stylelint-disable import-notation */
 
 @import "tailwindcss";
+
+@theme {
+  --font-sans: "Quicksand", sans-serif;
+}
