@@ -43,6 +43,12 @@ const formattedRemaining = computed(() => {
   return formatDuration(remainingTime.value);
 });
 
+const toggleButtonTitle = computed(() => {
+  if (isTimerRunning.value) return 'Pause';
+
+  return 'Start';
+});
+
 const toggleTimerIcon = computed(() => {
   if (isTimerRunning.value) return PhPause;
 
@@ -72,6 +78,7 @@ function toggleTimer() {
     <div class="flex gap-4 justify-center">
       <button
         class="p-2 rounded-full bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-800 transition-colors"
+        :title="toggleButtonTitle"
         @click="toggleTimer"
       >
         <component
@@ -83,6 +90,7 @@ function toggleTimer() {
       </button>
       <button
         class="p-2 rounded-full bg-zinc-200 hover:bg-zinc-300 active:bg-zinc-400 transition-colors"
+        title="Reset"
         @click="resetTimer"
       >
         <PhArrowCounterClockwise
