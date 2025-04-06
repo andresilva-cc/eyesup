@@ -19,6 +19,7 @@
   },
   "dependencies": {
     "@nuxt/fonts": "0.11.1",
+    "@phosphor-icons/vue": "^2.2.1",
     "@tailwindcss/vite": "^4.1.3",
     "nuxt": "^3.16.2",
     "tailwindcss": "^4.1.3",
