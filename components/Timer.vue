@@ -1,25 +1,25 @@
 <script setup lang="ts">
 import { PhPlay, PhPause, PhArrowCounterClockwise } from '@phosphor-icons/vue';
-import type { Cycle } from '~/types/Cycle';
+import { Cycle } from '~/types/Cycle';
 
 const WORK_DURATION = 20 * 60 * 1000; // 20 minutes
 const REST_DURATION = 20 * 1000; // 20 seconds
 
-const currentCycle = ref<Cycle>('work');
+const currentCycle = ref<Cycle>(Cycle.Work);
 
 function onTimerFinished() {
-  if (currentCycle.value === 'work') {
-    currentCycle.value = 'rest';
+  if (currentCycle.value === Cycle.Work) {
+    currentCycle.value = Cycle.Rest;
     remainingTime.value = REST_DURATION;
     return;
   }
 
-  currentCycle.value = 'work';
+  currentCycle.value = Cycle.Work;
   remainingTime.value = WORK_DURATION;
 }
 
 function onTimerReset() {
-  currentCycle.value = 'work';
+  currentCycle.value = Cycle.Work;
   remainingTime.value = WORK_DURATION;
 }
 
@@ -32,7 +32,7 @@ const {
 } = useTimer(WORK_DURATION, onTimerFinished, onTimerReset);
 
 const currentCycleText = computed(() => {
-  if (currentCycle.value === 'work') {
+  if (currentCycle.value === Cycle.Work) {
     return 'Keep working';
   }
 
