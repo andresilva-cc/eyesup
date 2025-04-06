@@ -3,7 +3,7 @@ import { PhPlay, PhPause, PhArrowCounterClockwise } from '@phosphor-icons/vue';
 import type { Cycle } from '~/types/Cycle';
 
 const INTERVAL_DELAY = 100; // ms
-const WORK_DURATION = 0.5 * 60 * 1000; // 20 minutes
+const WORK_DURATION = 20 * 60 * 1000; // 20 minutes
 const REST_DURATION = 20 * 1000; // 20 seconds
 
 const currentCycle = ref<Cycle>('work');
@@ -82,8 +82,8 @@ function toggleTimer() {
 </script>
 
 <template>
-  <div>
-    <p class="mb-8 uppercase font-semibold text-lg">
+  <div class="flex flex-col gap-4 py-8 border rounded-4xl border-emerald-700">
+    <p class="uppercase font-semibold text-lg">
       {{ currentCycleText }}
     </p>
 
@@ -93,7 +93,7 @@ function toggleTimer() {
 
     <div class="flex gap-4 justify-center">
       <button
-        class="mt-8 p-2 rounded-full bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-800 transition-colors"
+        class="p-2 rounded-full bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-800 transition-colors"
         @click="toggleTimer"
       >
         <component
@@ -104,7 +104,7 @@ function toggleTimer() {
         />
       </button>
       <button
-        class="mt-8 p-2 rounded-full bg-zinc-200 hover:bg-zinc-300 active:bg-zinc-400 transition-colors"
+        class="p-2 rounded-full bg-zinc-200 hover:bg-zinc-300 active:bg-zinc-400 transition-colors"
         @click="resetTimer('work')"
       >
         <PhArrowCounterClockwise
