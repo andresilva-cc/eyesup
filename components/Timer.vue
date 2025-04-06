@@ -2,15 +2,34 @@
 import { PhPlay, PhPause, PhArrowCounterClockwise } from '@phosphor-icons/vue';
 import type { Cycle } from '~/types/Cycle';
 
-const INTERVAL_DELAY = 100; // ms
 const WORK_DURATION = 20 * 60 * 1000; // 20 minutes
 const REST_DURATION = 20 * 1000; // 20 seconds
 
 const currentCycle = ref<Cycle>('work');
-const remaining = ref(WORK_DURATION);
-const isRunning = ref(false);
-const lastTick = ref<number | null>(null);
-let intervalId: ReturnType<typeof setInterval> | null = null;
+
+function onTimerFinished() {
+  if (currentCycle.value === 'work') {
+    currentCycle.value = 'rest';
+    remainingTime.value = REST_DURATION;
+    return;
+  }
+
+  currentCycle.value = 'work';
+  remainingTime.value = WORK_DURATION;
+}
+
+function onTimerReset() {
+  currentCycle.value = 'work';
+  remainingTime.value = WORK_DURATION;
+}
+
+const {
+  remainingTime,
+  isTimerRunning,
+  startTimer,
+  pauseTimer,
+  resetTimer,
+} = useTimer(WORK_DURATION, onTimerFinished, onTimerReset);
 
 const currentCycleText = computed(() => {
   if (currentCycle.value === 'work') {
@@ -21,58 +40,17 @@ const currentCycleText = computed(() => {
 });
 
 const formattedRemaining = computed(() => {
-  return formatDuration(remaining.value);
+  return formatDuration(remainingTime.value);
 });
 
 const toggleTimerIcon = computed(() => {
-  if (isRunning.value) return PhPause;
+  if (isTimerRunning.value) return PhPause;
 
   return PhPlay;
 });
 
-function startTimer() {
-  if (isRunning.value) return;
-  isRunning.value = true;
-
-  lastTick.value = Date.now();
-
-  intervalId = setInterval(() => {
-    const now = Date.now();
-    const elapsed = now - (lastTick.value ?? now);
-    remaining.value = Math.max(remaining.value - elapsed, 0);
-    lastTick.value = now;
-
-    if (remaining.value <= 0) {
-      const nextCycle = currentCycle.value === 'work' ? 'rest' : 'work';
-      resetTimer(nextCycle);
-      currentCycle.value = nextCycle;
-    }
-  }, INTERVAL_DELAY);
-}
-
-function pauseTimer() {
-  if (!isRunning.value) return;
-  isRunning.value = false;
-
-  if (intervalId) clearInterval(intervalId);
-
-  const now = Date.now();
-  const elapsed = now - (lastTick.value ?? now);
-  remaining.value = Math.max(remaining.value - elapsed, 0);
-  lastTick.value = null;
-}
-
-function resetTimer(cycle: Cycle) {
-  isRunning.value = false;
-  lastTick.value = null;
-  if (intervalId) clearInterval(intervalId);
-
-  remaining.value = cycle === 'work' ? WORK_DURATION : REST_DURATION;
-  currentCycle.value = cycle;
-}
-
 function toggleTimer() {
-  if (isRunning.value) {
+  if (isTimerRunning.value) {
     pauseTimer();
     return;
   }
@@ -105,7 +83,7 @@ function toggleTimer() {
       </button>
       <button
         class="p-2 rounded-full bg-zinc-200 hover:bg-zinc-300 active:bg-zinc-400 transition-colors"
-        @click="resetTimer('work')"
+        @click="resetTimer"
       >
         <PhArrowCounterClockwise
           :size="24"
