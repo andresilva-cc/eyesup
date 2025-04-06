@@ -9,6 +9,12 @@ export default defineNuxtConfig({
 
   devtools: { enabled: true },
 
+  app: {
+    head: {
+      title: 'EyesUp',
+    },
+  },
+
   css: [
     '~/assets/css/tailwind.css',
     '~/assets/css/global.css',
