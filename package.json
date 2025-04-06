@@ -9,7 +9,11 @@
     "preview": "nuxt preview",
     "postinstall": "nuxt prepare",
     "lint:js": "eslint",
-    "lint:js:fix": "eslint --fix"
+    "lint:js:fix": "pnpm lint:js --fix",
+    "lint:style": "stylelint --ignore-path .gitignore",
+    "lint:style:fix": "pnpm lint:style --fix",
+    "lint:style:all": "pnpm lint:style \"**/*.{vue,css}\"",
+    "lint:style:fix:all": "pnpm lint:style \"**/*.{vue,css}\" --fix"
   },
   "dependencies": {
     "nuxt": "^3.16.2",
@@ -20,6 +24,9 @@
     "@nuxt/eslint": "1.3.0",
     "eslint": "^9.0.0",
     "eslint-plugin-vuejs-accessibility": "^2.4.1",
+    "stylelint": "^16.18.0",
+    "stylelint-config-recommended-vue": "^1.6.0",
+    "stylelint-config-standard": "^38.0.0",
     "typescript": "^5.8.3"
   },
   "packageManager": "pnpm@9.15.1+sha512.1acb565e6193efbebda772702950469150cf12bcc764262e7587e71d19dc98a423dff9536e57ea44c49bdf790ff694e83c27be5faa23d67e0c033b583be4bfcf"
