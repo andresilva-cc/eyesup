@@ -78,6 +78,7 @@ function toggleTimer() {
     <div class="flex gap-4 justify-center">
       <Button
         color="primary"
+        icon
         :title="toggleButtonTitle"
         @click="toggleTimer"
       >
@@ -89,6 +90,7 @@ function toggleTimer() {
         />
       </Button>
       <Button
+        icon
         title="Reset"
         @click="resetTimer"
       >

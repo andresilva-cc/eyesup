@@ -3,10 +3,12 @@ import type { ButtonHTMLAttributes } from 'vue';
 
 interface ButtonProps extends /* @vue-ignore */ ButtonHTMLAttributes {
   color?: 'primary' | 'secondary';
+  icon?: boolean;
 }
 
 const props = withDefaults(defineProps<ButtonProps>(), {
   color: 'secondary',
+  icon: false,
 });
 
 const primaryClasses = 'bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-800 text-white rest:bg-white rest:hover:bg-zinc-200 rest:active:bg-zinc-300 rest:text-black';
@@ -21,8 +23,11 @@ const currentColorClasses = computed(() => {
 
 <template>
   <button
-    class="p-2 rounded-full cursor-pointer transition-colors duration-500"
-    :class="currentColorClasses"
+    class="font-medium uppercase cursor-pointer transition-colors duration-500"
+    :class="[
+      [props.icon ? 'rounded-full p-2' : 'rounded-lg px-4 py-1'],
+      currentColorClasses,
+    ]"
   >
     <slot />
   </button>
