@@ -76,8 +76,8 @@ function toggleTimer() {
     </code>
 
     <div class="flex gap-4 justify-center">
-      <button
-        class="p-2 rounded-full bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-800 transition-colors"
+      <Button
+        color="primary"
         :title="toggleButtonTitle"
         @click="toggleTimer"
       >
@@ -87,9 +87,8 @@ function toggleTimer() {
           weight="bold"
           color="#fff"
         />
-      </button>
-      <button
-        class="p-2 rounded-full bg-zinc-200 hover:bg-zinc-300 active:bg-zinc-400 transition-colors"
+      </Button>
+      <Button
         title="Reset"
         @click="resetTimer"
       >
@@ -98,7 +97,7 @@ function toggleTimer() {
           weight="bold"
           color="#000"
         />
-      </button>
+      </Button>
     </div>
   </div>
 </template>
