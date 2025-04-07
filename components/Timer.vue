@@ -5,7 +5,7 @@ import { Cycle } from '~/types/Cycle';
 const WORK_DURATION = 20 * 60 * 1000; // 20 minutes
 const REST_DURATION = 20 * 1000; // 20 seconds
 
-const currentCycle = ref<Cycle>(Cycle.Work);
+const currentCycle = useState<Cycle>('currentCycle', () => Cycle.Work);
 
 function onTimerFinished() {
   if (currentCycle.value === Cycle.Work) {
@@ -66,7 +66,7 @@ function toggleTimer() {
 </script>
 
 <template>
-  <div class="flex flex-col gap-4 py-8 border rounded-4xl border-emerald-700">
+  <div class="flex flex-col gap-4 py-8 border rounded-4xl border-emerald-700 rest:border-white/85 transition-colors duration-500">
     <p class="uppercase font-semibold text-lg">
       {{ currentCycleText }}
     </p>
@@ -85,7 +85,7 @@ function toggleTimer() {
           :is="toggleTimerIcon"
           :size="24"
           weight="bold"
-          color="#fff"
+          :color="currentCycle === Cycle.Work ? '#fff' : '#000'"
         />
       </Button>
       <Button
@@ -95,7 +95,7 @@ function toggleTimer() {
         <PhArrowCounterClockwise
           :size="24"
           weight="bold"
-          color="#000"
+          :color="currentCycle === Cycle.Work ? '#000' : '#fff'"
         />
       </Button>
     </div>

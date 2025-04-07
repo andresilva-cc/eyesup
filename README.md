@@ -9,7 +9,6 @@ A minimal app that helps you follow the 20-20-20 rule and rest your eyes while w
 - Support for multiple languages (starting with pt-BR and en-US)
 - Preference settings (customize durations)
 - Sync between devices
-- Design improvements (e.g., different background during rest)
 - Explanation of the 20-20-20 rule
 - Completed cycles counter
 - Full history (with charts?)
