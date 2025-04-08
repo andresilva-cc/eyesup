@@ -1,48 +1,67 @@
 <script setup lang="ts">
 import { PhPlay, PhPause, PhArrowCounterClockwise } from '@phosphor-icons/vue';
-import { Cycle } from '~/types/Cycle';
+import type { Cycle } from '~/types/Cycle';
 
-const currentCycle = useState<Cycle>('currentCycle', () => Cycle.Work);
+const currentCycle = useState<Cycle>('currentCycle', () => 'work');
 const settings = useSettings();
+const timer = useTimerStore();
 
-function onTimerFinished() {
-  if (currentCycle.value === Cycle.Work) {
-    currentCycle.value = Cycle.Rest;
-    remainingTime.value = settings.value.restDuration;
-    return;
+// Initial values
+timer.duration = settings.value.workDuration;
+timer.remaining = settings.value.workDuration;
+
+function handleTimerFinished() {
+  timer.state = 'idle';
+
+  const newCycle = currentCycle.value === 'work' ? 'rest' : 'work';
+  const newDuration = newCycle === 'work' ? settings.value.workDuration : settings.value.restDuration;
+
+  currentCycle.value = newCycle;
+  timer.duration = newDuration;
+  timer.remaining = newDuration;
+}
+
+function handleTimerReset() {
+  currentCycle.value = 'work';
+  timer.duration = settings.value.workDuration;
+}
+
+watch(() => timer.state, () => {
+  if (timer.state === 'finished') {
+    handleTimerFinished();
   }
+});
 
-  currentCycle.value = Cycle.Work;
-  remainingTime.value = settings.value.workDuration;
+timer.$onAction(({
+  name,
+}) => {
+  if (name === 'reset') {
+    handleTimerReset();
+  }
+});
+
+function updateDuration(newDuration: number) {
+  timer.duration = newDuration;
+
+  if (timer.state === 'idle') {
+    timer.remaining = newDuration;
+  }
 }
-
-function onTimerReset() {
-  currentCycle.value = Cycle.Work;
-  remainingTime.value = settings.value.workDuration;
-}
-
-const {
-  remainingTime,
-  isTimerRunning,
-  startTimer,
-  pauseTimer,
-  resetTimer,
-} = useTimer(settings.value.workDuration, onTimerFinished, onTimerReset);
 
 watch(() => settings.value.workDuration, () => {
-  if (isTimerRunning.value || currentCycle.value === Cycle.Rest) return;
+  if (currentCycle.value === 'rest') return;
 
-  remainingTime.value = settings.value.workDuration;
+  updateDuration(settings.value.workDuration);
 });
 
 watch(() => settings.value.restDuration, () => {
-  if (isTimerRunning.value || currentCycle.value === Cycle.Work) return;
+  if (currentCycle.value === 'work') return;
 
-  remainingTime.value = settings.value.restDuration;
+  updateDuration(settings.value.restDuration);
 });
 
 const currentCycleText = computed(() => {
-  if (currentCycle.value === Cycle.Work) {
+  if (currentCycle.value === 'work') {
     return 'Keep working';
   }
 
@@ -50,30 +69,31 @@ const currentCycleText = computed(() => {
 });
 
 const formattedRemaining = computed(() => {
-  if (import.meta.server) return '--:--';
-
-  return formatDuration(remainingTime.value);
+  return formatDuration(timer.remaining);
 });
 
 const toggleButtonTitle = computed(() => {
-  if (isTimerRunning.value) return 'Pause';
+  if (timer.state === 'running') return 'Pause';
 
   return 'Start';
 });
 
 const toggleTimerIcon = computed(() => {
-  if (isTimerRunning.value) return PhPause;
+  if (timer.state === 'running') return PhPause;
 
   return PhPlay;
 });
 
 function toggleTimer() {
-  if (isTimerRunning.value) {
-    pauseTimer();
-    return;
+  if (timer.state === 'running') {
+    return timer.pause();
   }
 
-  startTimer();
+  if (timer.state === 'paused') {
+    return timer.resume();
+  }
+
+  timer.start();
 }
 </script>
 
@@ -84,7 +104,9 @@ function toggleTimer() {
     </p>
 
     <code class="block text-8xl font-medium tracking-tighter">
-      {{ formattedRemaining }}
+      <ClientOnly fallback="--:--">
+        {{ formattedRemaining }}
+      </ClientOnly>
     </code>
 
     <div class="flex gap-4 justify-center">
@@ -98,18 +120,18 @@ function toggleTimer() {
           :is="toggleTimerIcon"
           :size="24"
           weight="bold"
-          :color="currentCycle === Cycle.Work ? '#fff' : '#000'"
+          :color="currentCycle === 'work' ? '#fff' : '#000'"
         />
       </Button>
       <Button
         icon
         title="Reset"
-        @click="resetTimer"
+        @click="timer.reset"
       >
         <PhArrowCounterClockwise
           :size="24"
           weight="bold"
-          :color="currentCycle === Cycle.Work ? '#000' : '#fff'"
+          :color="currentCycle === 'work' ? '#000' : '#fff'"
         />
       </Button>
     </div>

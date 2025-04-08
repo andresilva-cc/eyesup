@@ -1,4 +1,1 @@
-export enum Cycle {
-  Work = 'WORK',
-  Rest = 'REST',
-}
+export type Cycle = 'work' | 'rest';

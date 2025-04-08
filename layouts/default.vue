@@ -1,13 +1,13 @@
 <script setup lang="ts">
-import { Cycle } from '~/types/Cycle';
+import type { Cycle } from '~/types/Cycle';
 
-const currentCycle = useState<Cycle>('currentCycle', () => Cycle.Work);
+const currentCycle = useState<Cycle>('currentCycle', () => 'work');
 </script>
 
 <template>
   <div
     class="min-h-screen flex flex-col bg-emerald-50/15 text-emerald-950 rest:bg-emerald-700 rest:text-white transition-colors duration-500"
-    :class="{ 'rest-theme': currentCycle === Cycle.Rest }"
+    :class="{ 'rest-theme': currentCycle === 'rest' }"
   >
     <Header />
 
