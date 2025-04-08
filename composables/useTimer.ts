@@ -23,8 +23,8 @@ export const useTimer = (
       lastTick.value = now;
 
       if (remainingTime.value <= 0) {
-        onFinished?.();
         pauseTimer();
+        onFinished?.();
       }
     }, INTERVAL_DELAY);
   }
