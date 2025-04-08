@@ -1,4 +1,13 @@
+/* stylelint-disable at-rule-no-deprecated */
+
+/* stylelint-disable-next-line at-rule-no-unknown */
+@reference "tailwindcss/theme.css";
+
 /* stylelint-disable-next-line selector-id-pattern */
 html, body, #__nuxt {
-  min-height: 100vh;
+  @apply min-h-screen
 }
+
+/* * {
+  @apply focus:outline-emerald-600;
+} */

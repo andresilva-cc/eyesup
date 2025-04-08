@@ -2,25 +2,23 @@
 import { PhPlay, PhPause, PhArrowCounterClockwise } from '@phosphor-icons/vue';
 import { Cycle } from '~/types/Cycle';
 
-const WORK_DURATION = 20 * 60 * 1000; // 20 minutes
-const REST_DURATION = 20 * 1000; // 20 seconds
-
 const currentCycle = useState<Cycle>('currentCycle', () => Cycle.Work);
+const settings = useSettings();
 
 function onTimerFinished() {
   if (currentCycle.value === Cycle.Work) {
     currentCycle.value = Cycle.Rest;
-    remainingTime.value = REST_DURATION;
+    remainingTime.value = settings.value.restDuration;
     return;
   }
 
   currentCycle.value = Cycle.Work;
-  remainingTime.value = WORK_DURATION;
+  remainingTime.value = settings.value.workDuration;
 }
 
 function onTimerReset() {
   currentCycle.value = Cycle.Work;
-  remainingTime.value = WORK_DURATION;
+  remainingTime.value = settings.value.workDuration;
 }
 
 const {
@@ -29,7 +27,19 @@ const {
   startTimer,
   pauseTimer,
   resetTimer,
-} = useTimer(WORK_DURATION, onTimerFinished, onTimerReset);
+} = useTimer(settings.value.workDuration, onTimerFinished, onTimerReset);
+
+watch(() => settings.value.workDuration, () => {
+  if (isTimerRunning.value || currentCycle.value === Cycle.Rest) return;
+
+  remainingTime.value = settings.value.workDuration;
+});
+
+watch(() => settings.value.restDuration, () => {
+  if (isTimerRunning.value || currentCycle.value === Cycle.Work) return;
+
+  remainingTime.value = settings.value.restDuration;
+});
 
 const currentCycleText = computed(() => {
   if (currentCycle.value === Cycle.Work) {
@@ -40,6 +50,8 @@ const currentCycleText = computed(() => {
 });
 
 const formattedRemaining = computed(() => {
+  if (import.meta.server) return '--:--';
+
   return formatDuration(remainingTime.value);
 });
 

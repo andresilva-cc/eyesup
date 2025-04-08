@@ -5,6 +5,7 @@ export default defineNuxtConfig({
     '@nuxt/eslint',
     '@nuxt/test-utils/module',
     '@nuxt/fonts',
+    '@vueuse/nuxt',
   ],
 
   devtools: { enabled: true },
