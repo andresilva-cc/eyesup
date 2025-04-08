@@ -9,7 +9,7 @@ const showModal = defineModel<boolean>();
   >
     <div class="w-screen h-screen bg-gray-950/40 backdrop-blur-xs" />
 
-    <div class="min-w-xs absolute p-4 bg-white rounded-xl">
+    <div class="rest-theme-off min-w-xs absolute p-4 bg-white text-emerald-950 rounded-xl">
       <header
         v-if="$slots.header"
         class="text-center mb-4"
@@ -23,7 +23,7 @@ const showModal = defineModel<boolean>();
 
       <footer
         v-if="$slots.footer"
-        class="mt-4"
+        class="mt-8"
       >
         <slot name="footer" />
       </footer>

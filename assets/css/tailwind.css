@@ -8,4 +8,4 @@
   --font-mono: "PT Mono", monospace
 }
 
-@custom-variant rest (&:where(.rest, .rest *));
+@custom-variant rest (&:where(.rest-theme, .rest-theme *):not(.rest-theme-off):not(.rest-theme-off *));
