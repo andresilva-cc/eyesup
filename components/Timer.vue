@@ -126,7 +126,7 @@ function toggleTimer() {
       <Button
         icon
         title="Reset"
-        @click="timer.reset"
+        @click="timer.reset()"
       >
         <PhArrowCounterClockwise
           :size="24"

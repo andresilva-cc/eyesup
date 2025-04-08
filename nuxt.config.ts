@@ -22,6 +22,12 @@ export default defineNuxtConfig({
     '~/assets/css/global.css',
   ],
 
+  runtimeConfig: {
+    public: {
+      websocketServerUrl: process.env.WEBSOCKET_SERVER_URL as string,
+    },
+  },
+
   compatibilityDate: '2024-11-01',
 
   vite: {
