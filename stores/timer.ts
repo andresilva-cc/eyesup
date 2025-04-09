@@ -20,6 +20,8 @@ export const useTimerStore = defineStore('timer', () => {
   const socketState = ref<SocketState>('disconnected');
   const sessionId = ref<string | null>(null);
   const socketError = ref<ErrorMessage | null>(null);
+  let isExternalSync = false;
+  const unwatchSettings = ref<ReturnType<typeof watch> | null>(null);
 
   const settings = useSettings();
 
@@ -116,15 +118,36 @@ export const useTimerStore = defineStore('timer', () => {
       };
 
       socket!.send(JSON.stringify(createSessionMessage));
-      return;
+    }
+    else {
+      const joinSessionMessage: Message = {
+        type: 'join-session',
+        sessionId: sessionId.value as string,
+      };
+
+      socket!.send(JSON.stringify(joinSessionMessage));
     }
 
-    const joinSessionMessage: Message = {
-      type: 'join-session',
+    unwatchSettings.value = watch(settings, handleSettingsUpdate);
+  }
+
+  function handleSettingsUpdate() {
+    if (isExternalSync) return;
+
+    const message: SyncMessage = {
+      type: 'sync',
       sessionId: sessionId.value as string,
+      payload: {
+        state: timerState.value,
+        duration: duration.value,
+        remaining: remaining.value,
+        lastTick: lastTick.value,
+        currentCycle: currentCycle.value,
+        settings: settings.value,
+      },
     };
 
-    socket!.send(JSON.stringify(joinSessionMessage));
+    socket!.send(JSON.stringify(message));
   }
 
   function handleSocketMessage(event: MessageEvent) {
@@ -160,12 +183,18 @@ export const useTimerStore = defineStore('timer', () => {
     }
 
     if (message.type === 'sync') {
+      isExternalSync = true;
+
       timerState.value = message.payload.state;
       duration.value = message.payload.duration;
       remaining.value = message.payload.remaining;
       lastTick.value = message.payload.lastTick;
       currentCycle.value = message.payload.currentCycle;
       settings.value = message.payload.settings;
+
+      nextTick(() => {
+        isExternalSync = false;
+      });
 
       if (timerState.value === 'running') {
         tick();
@@ -203,6 +232,11 @@ export const useTimerStore = defineStore('timer', () => {
 
   function handleSocketClose() {
     socketState.value = 'disconnected';
+
+    if (unwatchSettings.value) {
+      unwatchSettings.value();
+      unwatchSettings.value = null;
+    }
   }
 
   function connectSocket() {
