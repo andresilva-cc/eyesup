@@ -11,7 +11,7 @@ const currentCycle = useState<Cycle>('currentCycle', () => 'work');
   >
     <Header />
 
-    <main class="flex-1 flex items-center justify-center mt-[-72px]">
+    <main class="flex-1 flex items-center justify-center mt-[-72px] p-4">
       <slot />
     </main>
   </div>
