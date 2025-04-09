@@ -6,6 +6,7 @@ import type { TimerState } from '~/types/TimerState';
 const INTERVAL_DELAY = 100; // ms
 
 export const useTimerStore = defineStore('timer', () => {
+  const settings = useSettings();
   const timerState = ref<TimerState>('idle');
   const currentCycle = useState<Cycle>('currentCycle', () => 'work');
 
@@ -14,16 +15,6 @@ export const useTimerStore = defineStore('timer', () => {
   const lastTick = ref<number | null>(null);
 
   let interval: ReturnType<typeof setInterval> | null = null;
-
-  let socket: WebSocket | null = null;
-  const syncType = ref<'host' | 'client' | null>(null);
-  const socketState = ref<SocketState>('disconnected');
-  const sessionId = ref<string | null>(null);
-  const socketError = ref<ErrorMessage | null>(null);
-  let isExternalSync = false;
-  const unwatchSettings = ref<ReturnType<typeof watch> | null>(null);
-
-  const settings = useSettings();
 
   function start(sync = true) {
     if (timerState.value !== 'idle') return;
@@ -110,6 +101,14 @@ export const useTimerStore = defineStore('timer', () => {
       interval = null;
     }
   }
+
+  let socket: WebSocket | null = null;
+  const syncType = ref<'host' | 'client' | null>(null);
+  const socketState = ref<SocketState>('disconnected');
+  const sessionId = ref<string | null>(null);
+  const socketError = ref<ErrorMessage | null>(null);
+  let isExternalSync = false;
+  const unwatchSettings = ref<ReturnType<typeof watch> | null>(null);
 
   function handleSocketOpen() {
     if (syncType.value === 'host') {
