@@ -1,5 +1,6 @@
 <div align="center">
-  <h1>EyesUp</h1>
+  <img src="public/favicon.ico" width="128">
+  <h1>EyesUp (web)</h1>
 </div>
 
 A minimal app that helps you follow the 20-20-20 rule and rest your eyes while working
