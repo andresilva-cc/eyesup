@@ -7,7 +7,6 @@ A minimal app that helps you follow the 20-20-20 rule and rest your eyes while w
 ## 📋 To-do
 
 - Support for multiple languages (starting with pt-BR and en-US)
-- Sync between devices
 - Explanation of the 20-20-20 rule
 - Completed cycles counter
 - Full history (with charts?)
