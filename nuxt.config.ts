@@ -24,6 +24,7 @@ export default defineNuxtConfig({
 
   runtimeConfig: {
     public: {
+      appUrl: process.env.APP_URL as string,
       websocketServerUrl: process.env.WEBSOCKET_SERVER_URL as string,
     },
   },

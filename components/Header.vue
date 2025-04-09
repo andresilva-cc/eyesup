@@ -53,6 +53,14 @@ const isSettingsModalVisible = ref(false);
 function toggleSettingsModal() {
   isSettingsModalVisible.value = !isSettingsModalVisible.value;
 }
+
+onMounted(() => {
+  const route = useRoute();
+
+  if (route.query.session) {
+    joinSession(route.query.session as string);
+  }
+});
 </script>
 
 <template>

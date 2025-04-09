@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { useQRCode } from '@vueuse/integrations/useQRCode';
+
 const timer = useTimerStore();
 
 const emit = defineEmits<{
@@ -13,6 +15,10 @@ function disconnect() {
   timer.disconnectSocket();
   closeModal();
 }
+
+const config = useRuntimeConfig();
+
+const qrCode = useQRCode(`${config.public.appUrl}/?session=${timer.sessionId}`);
 </script>
 
 <template>
@@ -29,7 +35,14 @@ function disconnect() {
           class="flex flex-col items-center"
         >
           <p>To connect from another device, use the code below</p>
-          <code class="mt-2 px-4 py-2 bg-gray-200 rounded-lg">{{ timer.sessionId }}</code>
+          <code class="mt-2 mb-8 px-4 py-2 bg-gray-200 rounded-lg">{{ timer.sessionId }}</code>
+          <p class="self-start">
+            Or simply scan the QR code
+          </p>
+          <img
+            :src="qrCode"
+            alt="QR Code"
+          >
         </div>
       </div>
     </template>
