@@ -35,6 +35,11 @@ export default defineNuxtConfig({
     plugins: [
       tailwindcss(),
     ],
+    ssr: {
+      noExternal: [
+        '@phosphor-icons/vue',
+      ],
+    },
   },
 
   typescript: {
