@@ -192,9 +192,9 @@ export const useTimerStore = defineStore('timer', () => {
       currentCycle.value = message.payload.currentCycle;
       settings.value = message.payload.settings;
 
-      nextTick(() => {
+      setTimeout(() => {
         isExternalSync = false;
-      });
+      }, 100);
 
       if (timerState.value === 'running') {
         tick();
