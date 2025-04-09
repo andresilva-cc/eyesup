@@ -1,10 +1,12 @@
 <script setup lang="ts">
-const showModal = defineModel<boolean>();
-
 const timer = useTimerStore();
 
+const emit = defineEmits<{
+  closeModal: [];
+}>();
+
 function closeModal() {
-  showModal.value = false;
+  emit('closeModal');
 }
 
 function disconnect() {
@@ -14,7 +16,7 @@ function disconnect() {
 </script>
 
 <template>
-  <Modal v-model="showModal">
+  <Modal>
     <template #header>
       <h2 class="text-xl font-semibold uppercase">
         Session

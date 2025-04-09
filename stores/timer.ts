@@ -1,5 +1,5 @@
 import type { Cycle } from '~/types/Cycle';
-import type { Message, PauseMessage, ResetMessage, ResumeMessage, StartMessage, SyncMessage } from '~/types/Message';
+import type { ErrorMessage, Message, PauseMessage, ResetMessage, ResumeMessage, StartMessage, SyncMessage } from '~/types/Message';
 import type { SocketState } from '~/types/SocketState';
 import type { TimerState } from '~/types/TimerState';
 
@@ -19,6 +19,7 @@ export const useTimerStore = defineStore('timer', () => {
   const syncType = ref<'host' | 'client' | null>(null);
   const socketState = ref<SocketState>('disconnected');
   const sessionId = ref<string | null>(null);
+  const socketError = ref<ErrorMessage | null>(null);
 
   const settings = useSettings();
 
@@ -188,6 +189,11 @@ export const useTimerStore = defineStore('timer', () => {
       useTimerStore().reset(false);
       return;
     }
+
+    if (message.type === 'error') {
+      socketError.value = message;
+      return;
+    }
   }
 
   function handleSocketClose() {
@@ -223,6 +229,7 @@ export const useTimerStore = defineStore('timer', () => {
     socketState,
     syncType,
     sessionId,
+    socketError,
     connectSocket,
     disconnectSocket,
   };

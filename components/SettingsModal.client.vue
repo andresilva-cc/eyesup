@@ -1,6 +1,4 @@
 <script setup lang="ts">
-const showModal = defineModel<boolean>();
-
 const workDurationOptions = [
   { value: 10 * 60_000, text: '10 minutes' },
   { value: 15 * 60_000, text: '15 minutes' },
@@ -28,20 +26,30 @@ function resetSettings() {
   selectedRestDuration.value = settings.value.restDuration;
 }
 
-function closeSettings() {
-  resetSettings();
-  showModal.value = false;
+const emit = defineEmits<{
+  closeModal: [];
+}>();
+
+function closeModal() {
+  emit('closeModal');
 }
 
-function saveSettings() {
+function resetAndCloseSettings() {
+  resetSettings();
+  closeModal();
+}
+
+async function saveSettings() {
   settings.value.workDuration = selectedWorkDuration.value;
   settings.value.restDuration = selectedRestDuration.value;
-  closeSettings();
+
+  await nextTick();
+  closeModal();
 }
 </script>
 
 <template>
-  <Modal v-model="showModal">
+  <Modal>
     <template #header>
       <h2 class="text-xl font-semibold uppercase">
         Settings
@@ -74,7 +82,7 @@ function saveSettings() {
           Done
         </Button>
 
-        <Button @click="closeSettings">
+        <Button @click="resetAndCloseSettings">
           Cancel
         </Button>
       </div>

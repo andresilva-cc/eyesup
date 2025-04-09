@@ -1,20 +1,23 @@
 <script setup lang="ts">
-const showModal = defineModel<boolean>();
-
 const emit = defineEmits<{
-  requestJoinSession: [sessionId: string];
+  joinSession: [sessionId: string];
+  closeModal: [];
 }>();
 
 const sessionId = ref('');
 
-function connect() {
-  emit('requestJoinSession', sessionId.value);
-  showModal.value = false;
+function joinSession() {
+  emit('joinSession', sessionId.value);
+  closeModal();
+}
+
+function closeModal() {
+  emit('closeModal');
 }
 </script>
 
 <template>
-  <Modal v-model="showModal">
+  <Modal>
     <template #header>
       <h2 class="text-xl font-semibold uppercase">
         Join Session
@@ -35,12 +38,12 @@ function connect() {
       <div class="flex justify-center gap-4">
         <Button
           color="primary"
-          @click="connect"
+          @click="joinSession"
         >
           Connect
         </Button>
 
-        <Button @click="showModal = false">
+        <Button @click="closeModal">
           Cancel
         </Button>
       </div>

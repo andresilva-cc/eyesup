@@ -1,28 +1,27 @@
 <script setup lang="ts">
-const showModal = defineModel<boolean>();
-
 const emit = defineEmits<{
-  requestCreateSession: [];
-  requestJoinSession: [];
+  openCreateSessionModal: [];
+  openJoinSessionModal: [];
+  closeModal: [];
 }>();
 
-function requestCreateSession() {
-  emit('requestCreateSession');
+function openCreateSessionModal() {
+  emit('openCreateSessionModal');
   closeModal();
 }
 
-function requestJoinSession() {
-  emit('requestJoinSession');
+function openJoinSessionModal() {
+  emit('openJoinSessionModal');
   closeModal();
 }
 
 function closeModal() {
-  showModal.value = false;
+  emit('closeModal');
 }
 </script>
 
 <template>
-  <Modal v-model="showModal">
+  <Modal>
     <template #header>
       <h2 class="text-xl font-semibold uppercase">
         Synchronization
@@ -37,13 +36,13 @@ function closeModal() {
 
         <Button
           color="primary"
-          @click="requestCreateSession"
+          @click="openCreateSessionModal"
         >
           Create Session
         </Button>
         <Button
           color="primary"
-          @click="requestJoinSession"
+          @click="openJoinSessionModal"
         >
           Join Session
         </Button>
