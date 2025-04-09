@@ -166,6 +166,11 @@ export const useTimerStore = defineStore('timer', () => {
       lastTick.value = message.payload.lastTick;
       currentCycle.value = message.payload.currentCycle;
       settings.value = message.payload.settings;
+
+      if (timerState.value === 'running') {
+        tick();
+      }
+
       return;
     }
 
